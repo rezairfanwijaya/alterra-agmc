@@ -16,3 +16,11 @@ func GetUsers() (interface{}, error) {
 
 	return users, nil
 }
+
+func AddUser(user models.User) (models.User, error) {
+	if err := config.DB.Create(&user); err != nil {
+		return user, err.Error
+	}
+
+	return user, nil
+}
