@@ -1,0 +1,55 @@
+package config
+
+import (
+	"altera/Day2/models"
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+)
+
+var DB *gorm.DB
+
+func InitDB() {
+	// load env
+	ENV := loadENV()
+	dsn := fmt.Sprintf("root:@tcp(%v)/%v?charset=utf8mb4&parseTime=True&loc=Local", ENV["host"], ENV["database"])
+
+	// open connection
+	var e error
+	DB, e = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if e != nil {
+		log.Fatal("Failed connect to database : ", e.Error())
+	}
+
+	// migration
+	initMigration()
+}
+
+func initMigration() {
+	err := DB.AutoMigrate(&models.User{})
+	if err != nil {
+		log.Fatal("Error migration : ", err.Error())
+	}
+}
+
+func loadENV() map[string]string {
+	// load file env
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Println("Error when load env : ", err.Error())
+	}
+
+	// get value from env
+	host := os.Getenv("HOST")
+	database := os.Getenv("DATABASE")
+
+	return map[string]string{
+		"host":     host,
+		"database": database,
+	}
+
+}
