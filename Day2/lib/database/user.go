@@ -38,11 +38,20 @@ func FindUserByEmail(email string) (models.User, error) {
 	return user, nil
 }
 
-// find user bya id
+// find user by id
 func FindUserById(id int) (models.User, error) {
 	var user models.User
 
 	if err := config.DB.Where("id = ?", id).Find(&user); err != nil {
+		return user, err.Error
+	}
+
+	return user, nil
+}
+
+// update user by id
+func UpdateUserById(user models.User) (models.User, error) {
+	if err := config.DB.Save(&user); err != nil {
 		return user, err.Error
 	}
 

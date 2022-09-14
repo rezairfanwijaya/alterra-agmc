@@ -94,6 +94,52 @@ func GetUserById(e echo.Context) error {
 
 }
 
+// update user by id
+func UpdateUserById(e echo.Context) error {
+	// id validation
+	id, err := helper.IdValidator(e)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	// get user by id
+	user, err := database.FindUserById(id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	// binding
+	var inputUser models.User
+
+	if err := e.Bind(&inputUser); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	// validate
+	if err := e.Validate(&inputUser); err != nil {
+		errBind := helper.ErrorBind(err)
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"message": errBind,
+		})
+	}
+
+	user.Email = inputUser.Email
+	user.Name = inputUser.Name
+	user.Password = inputUser.Password
+
+	// update
+	userUpdated, err := database.UpdateUserById(user)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	return e.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Successfully update user",
+		"data":    userUpdated,
+	})
+
+}
+
 // delete user by id
 func DeleteUserById(e echo.Context) error {
 	// id validation

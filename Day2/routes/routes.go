@@ -20,8 +20,9 @@ func New() *echo.Echo {
 	e.Validator = &CustomValidator{validator: validator.New()}
 
 	e.GET("/users", controllers.GetUsers)
-	e.POST("/user", controllers.AddUser)
 	e.GET("/user/:id", controllers.GetUserById)
+	e.POST("/user", controllers.AddUser)
+	e.PUT("/user/:id", controllers.UpdateUserById)
 	e.DELETE("/user/:id", controllers.DeleteUserById)
 
 	return e
