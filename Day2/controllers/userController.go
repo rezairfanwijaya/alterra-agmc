@@ -156,5 +156,6 @@ func DeleteUserById(e echo.Context) error {
 	return e.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Successfully delete user",
 	})
+	
 
 }
