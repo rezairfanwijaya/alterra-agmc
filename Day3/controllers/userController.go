@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"altera/Day2/models"
+	// "altera/Day3/models"
 	"altera/Day3/helper"
 	"altera/Day3/lib/database"
 	m "altera/Day3/middleware"
@@ -29,7 +29,7 @@ func GetUsers(e echo.Context) error {
 
 // add user
 func AddUser(e echo.Context) error {
-	var user models.User
+	var user model.User
 
 	// binding
 	if err := e.Bind(&user); err != nil {
@@ -73,10 +73,10 @@ func AddUser(e echo.Context) error {
 // get user by id
 func GetUserById(e echo.Context) error {
 
-	return e.JSON(http.StatusOK, map[string]interface{}{
-		"message": "Successfully get user by id",
-		"data":    e.Get("userId"),
-	})
+	// return e.JSON(http.StatusOK, map[string]interface{}{
+	// 	"message": "Successfully get user by id",
+	// 	"data":    e.Get("userId"),
+	// })
 	// get user id dari context
 	id := e.Get("userId").(int)
 
@@ -114,7 +114,7 @@ func UpdateUserById(e echo.Context) error {
 	}
 
 	// binding
-	var inputUser models.User
+	var inputUser model.User
 
 	if err := e.Bind(&inputUser); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())

@@ -1,7 +1,7 @@
 package config
 
 import (
-	"altera/Day2/models"
+	"altera/Day3/models"
 	"fmt"
 	"log"
 	"os"

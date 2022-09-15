@@ -2,7 +2,7 @@ package database
 
 import (
 	"altera/Day2/config"
-	"altera/Day2/models"
+	"altera/Day3/models"
 )
 
 // get all user
