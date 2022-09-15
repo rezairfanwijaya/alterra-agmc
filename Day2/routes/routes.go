@@ -19,11 +19,19 @@ func New() *echo.Echo {
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
 
+	// dinamis
 	e.GET("/users", controllers.GetUsers)
 	e.GET("/user/:id", controllers.GetUserById)
 	e.POST("/user", controllers.AddUser)
 	e.PUT("/user/:id", controllers.UpdateUserById)
 	e.DELETE("/user/:id", controllers.DeleteUserById)
+
+	// statis
+	e.GET("/books", controllers.GetAllBook)
+	e.GET("/books/:id", controllers.GetBookById)
+	e.PUT("/books/:id", controllers.UpdateBookById)
+	e.DELETE("/books/:id", controllers.DeleteBookById)
+	e.POST("/books", controllers.AddBook)
 
 	return e
 
