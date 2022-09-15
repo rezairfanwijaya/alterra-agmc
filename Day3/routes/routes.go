@@ -39,7 +39,7 @@ func New() *echo.Echo {
 	data := config.LoadENV()
 	jwt.Use(m.JWT([]byte(data["jwtSecret"])))
 
-	jwt.GET("/user/detail", controllers.GetUserById)
+	jwt.GET("/user/:id", controllers.GetUserById)
 
 	// statis
 	e.GET("/books", controllers.GetAllBook)

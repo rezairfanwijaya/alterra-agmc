@@ -73,12 +73,7 @@ func AddUser(e echo.Context) error {
 // get user by id
 func GetUserById(e echo.Context) error {
 
-	// return e.JSON(http.StatusOK, map[string]interface{}{
-	// 	"message": "Successfully get user by id",
-	// 	"data":    e.Get("userId"),
-	// })
-	// get user id dari context
-	id := e.Get("userId").(int)
+	id, _ := helper.IdValidator(e)
 
 	// find user by id
 	user, err := database.FindUserById(id)
