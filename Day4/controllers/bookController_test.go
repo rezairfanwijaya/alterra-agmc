@@ -83,12 +83,149 @@ func TestBookById(t *testing.T) {
 
 			GetBookById(c)
 			body := rec.Body.String()
-			log.Println("body" , body)
+			log.Println("body", body)
 			expectation := strings.HasPrefix(body, testCase.body)
 			assert.True(t, expectation)
 
 		})
 
 	}
+
+}
+
+func TestUpdateBookById(t *testing.T) {
+	type args struct {
+		name       string
+		path       string
+		body       string
+		paramName  string
+		paramValue string
+	}
+
+	testCases := []args{
+		{
+			name:       "Success",
+			path:       "/book:id",
+			body:       "{\"data\":{\"id\":2",
+			paramName:  "id",
+			paramValue: "2",
+		},
+		{
+			name:       "Book Not Found",
+			path:       "/book:id",
+			body:       "{\"data\":{\"id\":0",
+			paramName:  "id",
+			paramValue: "90",
+		},
+		{
+			name:       "Invalid Id",
+			path:       "/book:id",
+			body:       "",
+			paramName:  "id",
+			paramValue: "jdbdjfb",
+		},
+	}
+
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			rec := httptest.NewRecorder()
+			c := e.NewContext(req, rec)
+			c.SetPath(testCase.path)
+			c.SetParamNames(testCase.paramName)
+			c.SetParamValues(testCase.paramValue)
+
+			UpdateBookById(c)
+			body := rec.Body.String()
+			log.Println("body", body)
+			expectation := strings.HasPrefix(body, testCase.body)
+			assert.True(t, expectation)
+
+		})
+
+	}
+}
+
+func TestDeleteBookById(t *testing.T) {
+	type args struct {
+		name       string
+		path       string
+		body       string
+		paramName  string
+		paramValue string
+	}
+
+	testCases := []args{
+		{
+			name:       "Success",
+			path:       "/book:id",
+			body:       "{\"message\":\"Successfully delete book\"",
+			paramName:  "id",
+			paramValue: "2",
+		},
+		{
+			name:       "Book Not Found",
+			path:       "/book:id",
+			body:       "{\"message\":\"Book not found\"",
+			paramName:  "id",
+			paramValue: "90",
+		},
+		{
+			name:       "Invalid Id",
+			path:       "/book:id",
+			body:       "",
+			paramName:  "id",
+			paramValue: "jdbdjfb",
+		},
+	}
+
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			rec := httptest.NewRecorder()
+			c := e.NewContext(req, rec)
+			c.SetPath(testCase.path)
+			c.SetParamNames(testCase.paramName)
+			c.SetParamValues(testCase.paramValue)
+
+			DeleteBookById(c)
+			body := rec.Body.String()
+			log.Println("body", body)
+			expectation := strings.HasPrefix(body, testCase.body)
+			assert.True(t, expectation)
+
+		})
+
+	}
+}
+
+func TestAddNewBook(t *testing.T) {
+	type args struct {
+		name string
+		path string
+		body string
+	}
+
+	testCase := args{
+		name: "Success",
+		path: "/book:id",
+		body: "{\"data\":{\"id\":4",
+	}
+
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath(testCase.path)
+
+	AddBook(c)
+	body := rec.Body.String()
+	expectation := strings.HasPrefix(body, testCase.body)
+	assert.True(t, expectation)
 
 }

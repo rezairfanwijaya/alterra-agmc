@@ -47,9 +47,7 @@ func UpdateBookById(e echo.Context) error {
 	}
 
 	var inputUser models.Book
-	if err := e.Bind(&inputUser); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
+	e.Bind(&inputUser)
 
 	bookUpdate := database.UpdateBookById(inputUser, id)
 	return e.JSON(http.StatusOK, map[string]interface{}{
@@ -79,19 +77,13 @@ func DeleteBookById(e echo.Context) error {
 func AddBook(e echo.Context) error {
 	var inputUser models.Book
 
-	if err := e.Bind(&inputUser); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
+	e.Bind(&inputUser)
 
 	newBook := database.AddBook(inputUser)
-	if newBook.Id != 0 {
-		return e.JSON(http.StatusOK, map[string]interface{}{
-			"message": "Successfully add book",
-			"data":    newBook,
-		})
-	}
 
-	return e.JSON(http.StatusInternalServerError, map[string]interface{}{
-		"message": "failed add book",
+	return e.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Successfully add book",
+		"data":    newBook,
 	})
+
 }
