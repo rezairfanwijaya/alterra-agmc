@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
+	m "github.com/labstack/echo/v4/middleware"
 )
 
 type CustomValidator struct {
@@ -31,10 +32,18 @@ func New() *echo.Echo {
 	// endpoint
 	api := e.Group("api/v1")
 	api.GET("/users", userHandler.GetAllUser)
-	api.GET("/user/:id", userHandler.GetUserById)
+	// api.GET("/user/:id", userHandler.GetUserById)
 	api.DELETE("/user/:id", userHandler.DeleteUserById)
 	api.POST("/user", userHandler.AddNewUser)
 	api.PUT("/user/:id", userHandler.UpdateUserById)
+	api.POST("/auth", userHandler.Auth)
+
+	// implementasi middlewate jwt
+	jwt := e.Group("api/v1/jwt")
+	data := config.LoadENV()
+	jwt.Use(m.JWT([]byte(data["jwtSecret"])))
+
+	jwt.GET("/user/:id", userHandler.GetUserById)
 
 	return e
 }

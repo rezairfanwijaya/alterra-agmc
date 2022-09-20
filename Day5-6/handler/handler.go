@@ -121,5 +121,34 @@ func (uh *userHandler) UpdateUserById(e echo.Context) error {
 		return e.JSON(http.StatusBadRequest, response)
 	}
 
-	return e.JSON(http.StatusBadRequest, userUpdated)
+	response := helper.ResponseAPI("success", "success", http.StatusOK, userUpdated)
+	return e.JSON(http.StatusOK, response)
+}
+
+func (uh *userHandler) Auth(e echo.Context) error {
+	var inputUser user.UserLogin
+
+	// bind
+	if err := e.Bind(&inputUser); err != nil {
+		response := helper.ResponseAPI("failed", "failed", http.StatusBadRequest, err.Error())
+		return e.JSON(http.StatusBadRequest, response)
+	}
+
+	// validate
+	if err := e.Validate(&inputUser); err != nil {
+		myErr := helper.ErrorBind(err)
+		response := helper.ResponseAPI("failed", "failed", http.StatusBadRequest, myErr)
+		return e.JSON(http.StatusBadRequest, response)
+
+	}
+
+	// panggil service
+	token, err := uh.service.GenerateJWT(inputUser, e)
+	if err != nil {
+		response := helper.ResponseAPI("failed", "failed", http.StatusBadRequest, err.Error())
+		return e.JSON(http.StatusBadRequest, response)
+	}
+
+	response := helper.ResponseAPI("success", "success", http.StatusOK, token)
+	return e.JSON(http.StatusOK, response)
 }

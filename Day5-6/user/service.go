@@ -1,6 +1,12 @@
 package user
 
-import "errors"
+import (
+	"errors"
+
+	"altera/Day5-6/pkg/middleware"
+
+	"github.com/labstack/echo/v4"
+)
 
 type Service interface {
 	GetAllUser() ([]User, error)
@@ -8,6 +14,7 @@ type Service interface {
 	DeleteUserById(userID int) error
 	AddNewUser(userInput UserInput) (User, error)
 	UpdateUserById(userInput UserInput, userID int) (User, error)
+	GenerateJWT(userInput UserLogin, e echo.Context) (string, error)
 }
 
 type service struct {
@@ -100,4 +107,25 @@ func (s *service) UpdateUserById(userInput UserInput, userID int) (User, error) 
 	}
 
 	return userUpdated, nil
+}
+
+func (s *service) GenerateJWT(userInput UserLogin, e echo.Context) (string, error) {
+	// cek apakah email ada
+	user, err := s.repo.ShowUserByEmail(userInput.Email)
+	if err != nil {
+		return "", errors.New("user not found")
+	}
+
+	// cek password
+	if user.Password != userInput.Password {
+		return "", errors.New("incorrect password")
+	}
+
+	// generate token
+	token, err := middleware.CreateToken(user.Id, e)
+	if err != nil {
+		return "", errors.New("failed generate token")
+	}
+
+	return token, nil
 }
