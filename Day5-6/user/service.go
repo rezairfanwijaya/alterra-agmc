@@ -7,6 +7,7 @@ type Service interface {
 	GetUserById(userID int) (User, error)
 	DeleteUserById(userID int) error
 	AddNewUser(userInput UserInput) (User, error)
+	UpdateUserById(userInput UserInput, userID int) (User, error)
 }
 
 type service struct {
@@ -67,4 +68,36 @@ func (s *service) AddNewUser(userInput UserInput) (User, error) {
 	}
 
 	return newUser, nil
+}
+
+func (s *service) UpdateUserById(userInput UserInput, userID int) (User, error) {
+
+	// cek apakah user ada
+	userExisting, err := s.repo.ShowUserById(userID)
+	if err != nil {
+		return userExisting, errors.New("user not found")
+	}
+
+	// cek apakah email yang diupdate sudah ada, jika ada maka tolak update
+	emailExisting, err := s.repo.ShowUserByEmail(userInput.Email)
+	if err != nil {
+		return emailExisting, err
+	}
+
+	if emailExisting.Id != 0 {
+		return emailExisting, errors.New("email alredy taken")
+	}
+
+	// update
+	userExisting.Email = userInput.Email
+	userExisting.Password = userInput.Password
+	userExisting.Name = userInput.Name
+
+	// save
+	userUpdated, err := s.repo.Save(userExisting)
+	if err != nil {
+		return userUpdated, errors.New("failed to update user")
+	}
+
+	return userUpdated, nil
 }

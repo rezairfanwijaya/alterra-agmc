@@ -34,6 +34,7 @@ func New() *echo.Echo {
 	api.GET("/user/:id", userHandler.GetUserById)
 	api.DELETE("/user/:id", userHandler.DeleteUserById)
 	api.POST("/user", userHandler.AddNewUser)
+	api.PUT("/user/:id", userHandler.UpdateUserById)
 
 	return e
 }

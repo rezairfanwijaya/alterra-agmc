@@ -90,3 +90,36 @@ func (uh *userHandler) AddNewUser(e echo.Context) error {
 	return e.JSON(http.StatusOK, response)
 
 }
+
+func (uh *userHandler) UpdateUserById(e echo.Context) error {
+	// id validation
+	userID, err := helper.IdValidator(e)
+	if err != nil {
+		response := helper.ResponseAPI(err.Error(), "failed", http.StatusBadRequest, nil)
+		return e.JSON(http.StatusBadRequest, response)
+	}
+
+	var userInput user.UserInput
+
+	// binding
+	if err := e.Bind(&userInput); err != nil {
+		response := helper.ResponseAPI("failed", "failed", http.StatusBadRequest, err)
+		return e.JSON(http.StatusBadRequest, response)
+	}
+
+	// validate
+	if err := e.Validate(&userInput); err != nil {
+		myErr := helper.ErrorBind(err)
+		response := helper.ResponseAPI("failed", "failed", http.StatusBadRequest, myErr)
+		return e.JSON(http.StatusBadRequest, response)
+	}
+
+	// panggil service
+	userUpdated, err := uh.service.UpdateUserById(userInput, userID)
+	if err != nil {
+		response := helper.ResponseAPI("failed", "failed", http.StatusBadRequest, err.Error())
+		return e.JSON(http.StatusBadRequest, response)
+	}
+
+	return e.JSON(http.StatusBadRequest, userUpdated)
+}
