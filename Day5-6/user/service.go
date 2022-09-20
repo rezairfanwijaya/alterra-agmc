@@ -5,6 +5,7 @@ import "errors"
 type Service interface {
 	GetAllUser() ([]User, error)
 	GetUserById(userID int) (User, error)
+	DeleteUserById(userID int) error
 }
 
 type service struct {
@@ -31,4 +32,13 @@ func (s *service) GetUserById(userID int) (User, error) {
 	}
 
 	return user, nil
+}
+
+func (s *service) DeleteUserById(userID int) error {
+	err := s.repo.DeleteUserById(userID)
+	if err != nil {
+		return errors.New("user not found")
+	}
+
+	return nil
 }

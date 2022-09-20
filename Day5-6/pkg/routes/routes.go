@@ -22,6 +22,7 @@ func New() *echo.Echo {
 	api := e.Group("api/v1")
 	api.GET("/users", userHandler.GetAllUser)
 	api.GET("/user/:id", userHandler.GetUserById)
+	api.DELETE("/user/:id", userHandler.DeleteUserById)
 
 	return e
 }

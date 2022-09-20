@@ -39,3 +39,18 @@ func (uh *userHandler) GetUserById(e echo.Context) error {
 
 	return e.JSON(http.StatusOK, user)
 }
+
+func (uh *userHandler) DeleteUserById(e echo.Context) error {
+	// id validation
+	userID, err := helper.IdValidator(e)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	err = uh.service.DeleteUserById(userID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	return e.JSON(http.StatusOK, "successfully deleted user")
+}

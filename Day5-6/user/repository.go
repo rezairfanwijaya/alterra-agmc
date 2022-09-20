@@ -7,6 +7,7 @@ import (
 type Respository interface {
 	ShowAllUser() ([]User, error)
 	ShowUserById(userID int) (User, error)
+	DeleteUserById(userID int) error
 }
 
 type repository struct {
@@ -34,4 +35,18 @@ func (r *repository) ShowUserById(userID int) (User, error) {
 	}
 
 	return user, nil
+}
+
+// function delete user by id
+func (r *repository) DeleteUserById(userID int) error {
+	var user User
+	if err := r.db.First(&user, userID).Error; err != nil {
+		return err
+	}
+
+	if err := r.db.Where("id = ?", userID).Delete(&user).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
