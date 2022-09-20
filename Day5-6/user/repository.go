@@ -8,6 +8,8 @@ type Respository interface {
 	ShowAllUser() ([]User, error)
 	ShowUserById(userID int) (User, error)
 	DeleteUserById(userID int) error
+	Save(user User) (User, error)
+	ShowUserByEmail(email string) (User, error)
 }
 
 type repository struct {
@@ -49,4 +51,23 @@ func (r *repository) DeleteUserById(userID int) error {
 	}
 
 	return nil
+}
+
+// function add new user
+func (r *repository) Save(user User) (User, error) {
+	if err := r.db.Save(&user).Error; err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+// funtion show user by email
+func (r *repository) ShowUserByEmail(email string) (User, error) {
+	var user User
+	if err := r.db.Where("email = ?", email).Find(&user).Error; err != nil {
+		return user, err
+	}
+
+	return user, nil
 }

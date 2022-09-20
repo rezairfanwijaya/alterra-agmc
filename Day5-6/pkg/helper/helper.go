@@ -2,8 +2,10 @@ package helper
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -55,4 +57,14 @@ func ResponseAPI(message, status string, code int, data interface{}) *response {
 		Meta: meta,
 		Data: data,
 	}
+}
+
+func ErrorBind(err error) []string {
+	var myErr []string
+	for _, e := range err.(validator.ValidationErrors) {
+		// generate error from validator
+		errMessage := fmt.Sprintf("error on filed: %v, condition: %v", e.Field(), e.ActualTag())
+		myErr = append(myErr, errMessage)
+	}
+	return myErr
 }

@@ -62,3 +62,31 @@ func (uh *userHandler) DeleteUserById(e echo.Context) error {
 	response := helper.ResponseAPI("Success", "Success", http.StatusOK, nil)
 	return e.JSON(http.StatusOK, response)
 }
+
+func (uh *userHandler) AddNewUser(e echo.Context) error {
+	var user user.UserInput
+
+	// binding
+	if err := e.Bind(&user); err != nil {
+		response := helper.ResponseAPI("failed", "failed", http.StatusBadRequest, err)
+		return e.JSON(http.StatusBadRequest, response)
+	}
+
+	// validate
+	if err := e.Validate(&user); err != nil {
+		myErr := helper.ErrorBind(err)
+		response := helper.ResponseAPI("failed", "failed", http.StatusBadRequest, myErr)
+		return e.JSON(http.StatusBadRequest, response)
+	}
+
+	// panggil service
+	newUser, err := uh.service.AddNewUser(user)
+	if err != nil {
+		response := helper.ResponseAPI("failed", "failed", http.StatusBadRequest, err.Error())
+		return e.JSON(http.StatusBadRequest, response)
+	}
+
+	response := helper.ResponseAPI("success", "success", http.StatusOK, newUser)
+	return e.JSON(http.StatusOK, response)
+
+}

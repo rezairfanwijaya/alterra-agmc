@@ -7,3 +7,9 @@ type User struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
+type UserInput struct {
+	Name     string `json:"name" validate:"required"`
+	Email    string `json:"email" validate:"required"`
+	Password string `json:"password" validate:"required"`
+}

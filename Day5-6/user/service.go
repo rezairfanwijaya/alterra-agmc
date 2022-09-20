@@ -6,6 +6,7 @@ type Service interface {
 	GetAllUser() ([]User, error)
 	GetUserById(userID int) (User, error)
 	DeleteUserById(userID int) error
+	AddNewUser(userInput UserInput) (User, error)
 }
 
 type service struct {
@@ -41,4 +42,29 @@ func (s *service) DeleteUserById(userID int) error {
 	}
 
 	return nil
+}
+
+func (s *service) AddNewUser(userInput UserInput) (User, error) {
+	// cek apakah user tersebut sudah terdaftar di db
+	existingUser, err := s.repo.ShowUserByEmail(userInput.Email)
+	if err != nil {
+		return User{}, err
+	}
+
+	if existingUser.Id != 0 {
+		return User{}, errors.New("user is already registered")
+	}
+
+	// add user to db
+	var user User
+	user.Email = userInput.Email
+	user.Password = userInput.Password
+	user.Name = userInput.Name
+
+	newUser, err := s.repo.Save(user)
+	if err != nil {
+		return newUser, err
+	}
+
+	return newUser, nil
 }
