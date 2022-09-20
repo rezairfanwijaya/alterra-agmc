@@ -1,9 +1,9 @@
 package routes
 
 import (
-	"altera/Day5/handler"
-	"altera/Day5/pkg/config"
-	"altera/Day5/user"
+	"altera/Day5-6/handler"
+	"altera/Day5-6/pkg/config"
+	"altera/Day5-6/user"
 
 	"github.com/labstack/echo/v4"
 )

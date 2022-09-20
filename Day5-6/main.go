@@ -1,9 +1,9 @@
 package main
 
 import (
-	"altera/Day5/pkg/config"
-	"altera/Day5/pkg/helper"
-	"altera/Day5/pkg/routes"
+	"altera/Day5-6/pkg/config"
+	"altera/Day5-6/pkg/helper"
+	"altera/Day5-6/pkg/routes"
 )
 
 func main() {
@@ -11,5 +11,4 @@ func main() {
 	e := routes.New()
 	helper.LogMiddleware(e)
 	e.Start(":8080")
-
 }

@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"altera/Day5/user"
+	"altera/Day5-6/user"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
