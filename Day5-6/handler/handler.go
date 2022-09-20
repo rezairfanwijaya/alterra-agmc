@@ -19,38 +19,46 @@ func NewUserHandler(service user.Service) *userHandler {
 func (uh *userHandler) GetAllUser(e echo.Context) error {
 	user, err := uh.service.GetAllUser()
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		response := helper.ResponseAPI(err.Error(), "failed", http.StatusBadRequest, nil)
+		return e.JSON(http.StatusBadRequest, response)
 	}
 
-	return e.JSON(http.StatusOK, user)
+	response := helper.ResponseAPI("Success", "Success", http.StatusOK, user)
+	return e.JSON(http.StatusOK, response)
 }
 
 func (uh *userHandler) GetUserById(e echo.Context) error {
 	// id validation
 	userID, err := helper.IdValidator(e)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		response := helper.ResponseAPI(err.Error(), "failed", http.StatusBadRequest, nil)
+		return e.JSON(http.StatusBadRequest, response)
 	}
 
 	user, err := uh.service.GetUserById(userID)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		response := helper.ResponseAPI(err.Error(), "failed", http.StatusBadRequest, nil)
+		return e.JSON(http.StatusBadRequest, response)
 	}
 
-	return e.JSON(http.StatusOK, user)
+	response := helper.ResponseAPI("Success", "Success", http.StatusOK, user)
+	return e.JSON(http.StatusOK, response)
 }
 
 func (uh *userHandler) DeleteUserById(e echo.Context) error {
 	// id validation
 	userID, err := helper.IdValidator(e)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		response := helper.ResponseAPI(err.Error(), "failed", http.StatusBadRequest, nil)
+		return e.JSON(http.StatusBadRequest, response)
 	}
 
 	err = uh.service.DeleteUserById(userID)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		response := helper.ResponseAPI(err.Error(), "failed", http.StatusBadRequest, nil)
+		return e.JSON(http.StatusBadRequest, response)
 	}
 
-	return e.JSON(http.StatusOK, "successfully deleted user")
+	response := helper.ResponseAPI("Success", "Success", http.StatusOK, nil)
+	return e.JSON(http.StatusOK, response)
 }
