@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"altera/Day5-6/pkg/helper"
 	"altera/Day5-6/user"
 	"net/http"
 
@@ -19,6 +20,21 @@ func (uh *userHandler) GetAllUser(e echo.Context) error {
 	user, err := uh.service.GetAllUser()
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return e.JSON(http.StatusOK, user)
+}
+
+func (uh *userHandler) GetUserById(e echo.Context) error {
+	// id validation
+	userID, err := helper.IdValidator(e)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	user, err := uh.service.GetUserById(userID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return e.JSON(http.StatusOK, user)

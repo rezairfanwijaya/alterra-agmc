@@ -6,6 +6,7 @@ import (
 
 type Respository interface {
 	ShowAllUser() ([]User, error)
+	ShowUserById(userID int) (User, error)
 }
 
 type repository struct {
@@ -23,4 +24,14 @@ func (r *repository) ShowAllUser() ([]User, error) {
 		return users, err
 	}
 	return users, nil
+}
+
+// function get user by id
+func (r *repository) ShowUserById(userID int) (User, error) {
+	var user User
+	if err := r.db.First(&user, userID).Error; err != nil {
+		return user, err
+	}
+
+	return user, nil
 }

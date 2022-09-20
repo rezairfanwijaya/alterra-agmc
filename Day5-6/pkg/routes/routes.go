@@ -21,6 +21,7 @@ func New() *echo.Echo {
 	// endpoint
 	api := e.Group("api/v1")
 	api.GET("/users", userHandler.GetAllUser)
+	api.GET("/user/:id", userHandler.GetUserById)
 
 	return e
 }

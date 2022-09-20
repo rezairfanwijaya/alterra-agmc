@@ -4,6 +4,7 @@ import "errors"
 
 type Service interface {
 	GetAllUser() ([]User, error)
+	GetUserById(userID int) (User, error)
 }
 
 type service struct {
@@ -21,4 +22,13 @@ func (s *service) GetAllUser() ([]User, error) {
 	}
 
 	return users, nil
+}
+
+func (s *service) GetUserById(userID int) (User, error) {
+	user, err := s.repo.ShowUserById(userID)
+	if err != nil {
+		return user, errors.New("user not found")
+	}
+
+	return user, nil
 }
